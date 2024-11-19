@@ -17,7 +17,12 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "a": "rm -rf node_modules package-lock.json && npm i",
-    "b": "npm remove msw && npm i -D msw@2.5.2"
+    "b": "npm remove msw && npm i -D msw@2.5.2",
+    "lint:checkconfig": "eslint --print-config src/packages/userweb/pages/shared/labels/AccountTypeIcon.js > eslintconfigtest",
+    "lint": "eslint src --quiet",
+    "lint:cisummary": "eslint --format node_modules/eslint-stats/byErrorAndWarning.js src >> $GITHUB_STEP_SUMMARY || true",
+    "lint:ci": "eslint --config=eslint.config.ci.cjs src --format json --output-file eslint_report.json",
+    "lint:local": "eslint --config=eslint.config.ci.cjs src"
   },
   "eslintConfig": {
     "extends": [
@@ -31,6 +36,8 @@
     ]
   },
   "devDependencies": {
+    "eslint-plugin-react-prefer-function-component": "^3.3.0",
+    "globals": "^15.12.0",
     "msw": "^2.5.2"
   }
 }
