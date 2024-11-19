@@ -1,0 +1,154 @@
+name: PR
+
+on:
+  pull_request:
+    branches:
+      - 'master'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - name: Install node_modules
+        run: |
+          npm ci
+
+      - name: Run linting
+        continue-on-error: true # next step fails in case of errors
+        run: npm run lint:ci
+      - name: Annotate Code Linting Results
+        uses: ataylorme/eslint-annotate-action@v3
+        if: ${{ always() && github.actor != 'dependabot[bot]' }} # dependabot doesn't have permissions
+        with:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          report-json: 'eslint_report.json'
+          only-pr-files: false
+          fail-on-warning: false
+      # - name: Check if proxies files has correct structure
+      #   uses: actions/github-script@v7
+      #   with:
+      #     script: |
+      #       const proxies = require('./proxies')
+
+      #       proxies.forEach((item) => {
+      #         const proxyItemStructure = ['path', 'target', 'targetProd', 'httpAllow'];
+      #         const missedProperties = proxyItemStructure.filter((key) => {
+      #           return !Object.keys(item).includes(key)
+      #         })
+
+      #         if (missedProperties) {
+      #           missedProperties.forEach((prop) => {
+      #             core.setFailed(`${prop} is missing in path ${item.path} for proxies`)
+      #           })
+      #         }
+
+      #         if(!item.path.length || !item.target.length || !item.targetProd.length || !item.httpAllow.length) {
+      #           core.setFailed(`Some of these properties path, target, targetProd or httpAllow are empty in path ${item.path} for proxies`);
+      #         }
+
+      #         if (item.targetProd.includes('-australia.staging.ezprk.dev')) {
+      #           core.setFailed(`you use staging url for targetProd in path ${item.path}`)
+      #         } else if (!(item.targetProd.includes('usa.ezprk.net') || item.targetProd.includes('australia.ezprk.net'))) {
+      #           if (
+      #             item.targetProd.includes('-staging') ||
+      #             item.targetProd.includes('au-epic-internal.staging.ezprk.dev') ||
+      #             item.targetProd.includes('staging.ezprk.dev')
+      #           ) {
+      #             core.setFailed(`You use staging url for targetProd in path ${item.path} for proxies`)
+      #           }
+      #         }
+      #       })
+  unittests:
+    runs-on: ubuntu-latest
+    if: ${{ !contains(github.event.commits[0].message, '[skip ci]') }}
+    steps:
+      - name: Checkout code
+        if: "${{ !startsWith(github.head_ref, 'revert') }}"
+        uses: actions/checkout@v4
+      - name: Set up node
+        if: "${{ !startsWith(github.head_ref, 'revert') }}"
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - name: Install node_modules
+        if: "${{ !startsWith(github.head_ref, 'revert') }}"
+        run: |
+          npm ci
+      - name: Run tests
+        if: "${{ !startsWith(github.head_ref, 'revert') }}"
+        run: npm run test-ci
+  playwright:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: [1, 2, 3, 4]
+        shardTotal: [4]
+    if: ${{ !contains(github.event.commits[0].message, '[skip ci]') }}
+    steps:
+      - name: Checkout code
+        if: "${{ !startsWith(github.head_ref, 'revert') }}"
+        uses: actions/checkout@v4
+      - name: Set up node
+        if: "${{ !startsWith(github.head_ref, 'revert') }}"
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - name: Install node_modules
+        if: "${{ !startsWith(github.head_ref, 'revert') }}"
+        run: |
+          npm ci
+      - name: Install Playwright Browsers
+        if: "${{ !startsWith(github.head_ref, 'revert') }}"
+        run: npx playwright install --with-deps chromium
+      - name: Run Playwright tests
+        if: "${{ !startsWith(github.head_ref, 'revert') }}"
+        run: npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+      - name: Upload blob report to GitHub Actions Artifacts
+        if: "${{ !startsWith(github.head_ref, 'revert') }}"
+        uses: actions/upload-artifact@v4
+        with:
+          name: blob-report-${{ matrix.shardIndex }}
+          path: blob-report
+          retention-days: 1
+  merge-reports:
+    # Merge reports after playwright-tests, even if some shards have failed
+    if: ${{ !cancelled() }}
+    needs: [playwright]
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Download blob reports from GitHub Actions Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: all-blob-reports
+          pattern: blob-report-*
+          merge-multiple: true
+
+      - name: Merge into HTML Report
+        run: npx playwright merge-reports --reporter html ./all-blob-reports
+
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: html-report--attempt-${{ github.run_attempt }}
+          path: playwright-report
+          retention-days: 14
