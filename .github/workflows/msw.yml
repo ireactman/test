@@ -81,8 +81,16 @@ jobs:
       - name: Merge temporary branch back into PR branch
         if: ${{ contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') }}
         run: |
-          git checkout $PR_BRANCH_NAME
-          git pull origin $TEMP_BRANCH_NAME
+          # Ensure all remote branches are fetched
+          git fetch origin
+
+          # Checkout the PR branch
+          git checkout $PR_BRANCH_NAME || (echo "Branch $PR_BRANCH_NAME not found" && exit 1)
+
+          # Merge the temporary branch
+          git merge $TEMP_BRANCH_NAME --no-ff --no-edit
+
+          # Push the changes back to the PR branch
           git push origin $PR_BRANCH_NAME
 
       - name: Delete temporary branch
