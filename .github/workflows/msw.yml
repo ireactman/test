@@ -3,8 +3,8 @@ name: Update mockServiceWorker.js
 on:
   pull_request:
     types:
-      # - opened
-      - synchronize # maybe don't need
+      - opened
+      # - synchronize # maybe don't need
     branches:
       - master
 
