@@ -15,7 +15,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "a": "rm -rf node_modules package-lock.json && npm i",
+    "b": "npm remove msw && npm i -D msw@2.5.2"
   },
   "eslintConfig": {
     "extends": [
@@ -23,16 +25,12 @@
       "react-app/jest"
     ]
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
+  "msw": {
+    "workerDirectory": [
+      "public"
     ]
+  },
+  "devDependencies": {
+    "msw": "^2.5.2"
   }
 }
