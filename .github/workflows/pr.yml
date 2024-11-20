@@ -4,8 +4,8 @@ on:
   pull_request:
     branches:
       - 'master'
-    branches-ignore:
-      - 'dependabot/**msw**'
+    # branches-ignore:
+    #   - 'dependabot/**msw**'
 
   workflow_run:
     workflows: [msw]
