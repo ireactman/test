@@ -4,12 +4,10 @@ on:
   pull_request:
     branches:
       - 'master'
-    branches-ignore:
-      - 'dependabot/**msw**'
 
-  workflow_run:
-    workflows: [msw]
-    types: [completed]
+  # workflow_run:
+  #   workflows: [msw]
+  #   types: [completed]
     # branches: [master]
 
 concurrency:
