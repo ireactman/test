@@ -61,6 +61,7 @@ jobs:
           if [[ $(git status --porcelain) ]]; then
             git status --porcelain
             git add public/mockServiceWorker.js
+            git commit -m "ROM - blabla"
             
             # git commit -m "[dependabot skip] Automatically updating mockServiceWorker.js file after 'msw' update in package.json"
             # git commit -m "Automatically updating mockServiceWorker.js file after 'msw' update in package.json"
@@ -72,7 +73,6 @@ jobs:
 
       - name: Push new branch
         run: |
-          git fetch origin MSW-1 || true
           git push --force-with-lease origin MSW-1
 
       - name: Create new pull request
