@@ -65,6 +65,7 @@ jobs:
       - name: Regenerate mockServiceWorker.js
         if: ${{contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') }}
         run: |
+          git pull origin master
           git checkout master
           git checkout -b MSW-1
 
@@ -81,7 +82,7 @@ jobs:
         run: |
           if [[ $(git status --porcelain) ]]; then
             git status --porcelain
-            
+
             git add .
             git commit -m "ROM - blabla"
 
