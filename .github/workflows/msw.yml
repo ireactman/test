@@ -65,17 +65,16 @@ jobs:
       - name: Regenerate mockServiceWorker.js
         if: ${{contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') }}
         run: |
-          git config pull.rebase false
+          # git config pull.rebase false
           git pull origin master --allow-unrelated-histories
+          
           git checkout master
           git checkout -b MSW-1
 
+          git stash
           npm i -D msw@latest
 
-          # DEPENDABOT_COMMIT_HASH=$(git rev-parse github.event.pull_request.head.ref)
-
           echo "Current branch is: $(git rev-parse --abbrev-ref HEAD)"
-
           
           npx msw init public/ --save
       - name: Check for changes in mockServiceWorker.js
