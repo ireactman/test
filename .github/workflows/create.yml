@@ -62,7 +62,7 @@ jobs:
             # git add package.json
             # git add public/mockServiceWorker.js
             git add .
-            git commit -m "ROM - blabla"
+            git commit -m --amend "ROM - blabla"
           else
             echo "No changes in mockServiceWorker.js"
           fi
