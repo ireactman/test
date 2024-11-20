@@ -47,6 +47,9 @@ jobs:
         run: |
           if [[ $(git status --porcelain) ]]; then
             git status --porcelain
+
+            git add package-lock.json
+            git add package.json
             git add public/mockServiceWorker.js
           else
             echo "No changes in mockServiceWorker.js"
