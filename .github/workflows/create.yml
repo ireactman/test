@@ -39,14 +39,15 @@ jobs:
 
       - name: Regenerate mockServiceWorker.js
         run: |
-          # git remote set-url origin https://${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
           
-          if git ls-remote --exit-code --heads origin MSW-1; then
-            git fetch origin MSW-1
-            git checkout MSW-1
-          else
-            git checkout -b MSW-1
-          fi
+          # if git ls-remote --exit-code --heads origin MSW-1; then
+          #   git fetch origin MSW-1
+          #   git checkout MSW-1
+          # else
+          #   git checkout -b MSW-1
+          # fi
+
+          git checkout -b MSW-1
 
           npm i msw@latest
           
