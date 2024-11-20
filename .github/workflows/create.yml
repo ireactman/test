@@ -64,7 +64,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh pr create --title "My test title" --body "This PR updates the translations from OneSky" --base MSW-1
+          gh pr create --title "My test title" --body "This PR updates the translations from OneSky"
                   
           # curl -X POST \
           #   -H "Authorization: token $GITHUB_TOKEN" \
