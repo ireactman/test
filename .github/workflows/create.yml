@@ -1,0 +1,64 @@
+name: create
+
+on:
+  workflow_run:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  GIT_AUTHOR_NAME: ${{ github.actor }}
+  GIT_AUTHOR_EMAIL: ${{ github.actor }}@users.noreply.github.com
+  GIT_COMMITTER_NAME: GitHub
+  GIT_COMMITTER_EMAIL: actions@github.com
+  BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
+  #BRANCH_NAME: msw-update-${{ github.run_id }}
+
+jobs:
+  update_msw_worker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Dependabot metadata
+        id: dependabot-metadata
+        uses: dependabot/fetch-metadata@v2
+      - uses: actions/checkout@v4
+      - name: Set up node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - name: Install node_modules
+        run: |
+          npm ci
+      - name: Regenerate mockServiceWorker.js
+        run: |
+          git checkout -b MSW-1
+          npm run b
+          npx msw init public/ --save
+
+      - name: Check for changes in mockServiceWorker.js
+        run: |
+          if [[ $(git status --porcelain) ]]; then
+            git status --porcelain
+            git add public/mockServiceWorker.js
+          else
+            echo "No changes in mockServiceWorker.js"
+          fi
+
+      - name: Push new branch
+        run: |
+          git push origin MSW-1 --force
+
+      - name: Create new pull request
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -X POST \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d '{"title":"Automated PR creation","head":"MSW-1","base":"main"}' \
+            https://api.github.com/repos/${{ github.repository }}/pulls
+          # gh pr create -B base_branch -H branch_to_merge --title 'Merge branch_to_merge into base_branch' --body 'Created by Github action'
