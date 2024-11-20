@@ -77,4 +77,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr create --base master --head MSW-1 --title 'MSW update' --body 'Created via CI/CD'
-          gh workflow run pr.yml
+          #
