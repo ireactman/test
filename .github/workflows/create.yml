@@ -79,4 +79,4 @@ jobs:
           #
 
   pr:
-    uses: ./.github/workflows/pr.yml@v1
+    uses: ./.github/workflows/pr.yml@master
