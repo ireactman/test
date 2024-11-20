@@ -5,10 +5,10 @@ on:
     workflows: [PR]
     types: [completed]
     branches: [master, dependabot/**]
-  # pull_request:
-  #   types:
-  #     - opened
-  #     - synchronize # maybe don't need
+  pull_request:
+    types:
+      # - opened
+      - synchronize # maybe don't need
   #   branches:
   #     - master
 
