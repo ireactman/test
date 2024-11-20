@@ -6,11 +6,9 @@ on:
     # types: [completed]
     # branches: [master, dependabot/**]
   pull_request:
-    types:
-      - opened
-      # - synchronize # maybe don't need
-    branches:
-      - master
+    types: [opened, synchronize]
+    # branches:
+    #   - master
 
 permissions:
   contents: write
