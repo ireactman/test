@@ -38,6 +38,7 @@ jobs:
 
       - name: Regenerate mockServiceWorker.js
         run: |
+          git remote set-url origin https://${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
           git checkout -b MSW-1
 
           npm i msw@latest
@@ -59,7 +60,7 @@ jobs:
 
       - name: Push new branch
         run: |
-          git push origin MSW-1
+          git push origin MSW-1 || git push --set-upstream origin MSW-1
 
       - name: Create new pull request
         env:
