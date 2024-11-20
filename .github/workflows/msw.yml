@@ -65,7 +65,7 @@ jobs:
       - name: Regenerate mockServiceWorker.js
         if: ${{contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') }}
         run: |
-          # git config pull.rebase false
+          git config pull.rebase true
           git pull origin master --allow-unrelated-histories
           
           git checkout master
