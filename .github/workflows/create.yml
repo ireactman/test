@@ -66,7 +66,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr create -B MSW-1 -H master --title 'Merge branch_to_merge into base_branch' --body 'Created by Github action'
-          gh pr create --title "My test title" --body "This PR updates the translations from OneSky" --head MSW-1 --base master
+          # gh pr create --title "My test title" --body "This PR updates the translations from OneSky" --head MSW-1 --base master
                   
           # curl -X POST \
           #   -H "Authorization: token $GITHUB_TOKEN" \
