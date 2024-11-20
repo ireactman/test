@@ -79,4 +79,9 @@ jobs:
           #
 
   pr:
-    uses: ./.github/workflows/pr.yml@master
+    name: pull request check
+    runs-on: ubuntu-latest
+    needs: update_msw_worker
+    steps:
+      - name: Start
+        uses: ./.github/workflows/pr.yml@master
