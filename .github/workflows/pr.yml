@@ -9,7 +9,7 @@ on:
   workflow_run:
     workflows: [msw]
     types: [completed]
-    branches: [master]
+    branches: [master, dependabot/**]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
