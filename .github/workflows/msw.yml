@@ -47,7 +47,7 @@ jobs:
         
           git checkout -b MSW-1
 
-          DEPENDABOT_COMMIT_HASH=$(git rev-parse github.event.pull_request.head.ref)
+          # DEPENDABOT_COMMIT_HASH=$(git rev-parse github.event.pull_request.head.ref)
 
           echo "Current branch is: $(git rev-parse --abbrev-ref HEAD)"
           # git config pull.rebase false      
