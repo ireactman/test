@@ -8,7 +8,7 @@ on:
   pull_request:
     types:
       - opened
-      # - synchronize # maybe don't need
+      - synchronize # maybe don't need
     branches:
       - master
 
