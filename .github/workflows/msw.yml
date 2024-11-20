@@ -75,10 +75,11 @@ jobs:
       - name: Create new pull request
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           curl -X POST \
-            -H "Authorization: token $GIT_TOKEN" \
+            -H "Authorization: token $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.v3+json" \
             -d '{"title":"Automated PR creation","head":"MSW-1","base":"main"}' \
             https://api.github.com/repos/${{ github.repository }}/pulls
+          # gh pr create -B base_branch -H branch_to_merge --title 'Merge branch_to_merge into base_branch' --body 'Created by Github action'
