@@ -58,9 +58,10 @@ jobs:
           if [[ $(git status --porcelain) ]]; then
             git status --porcelain
 
-            git add package-lock.json
-            git add package.json
-            git add public/mockServiceWorker.js
+            # git add package-lock.json
+            # git add package.json
+            # git add public/mockServiceWorker.js
+            git add .
             git commit -m "ROM - blabla"
           else
             echo "No changes in mockServiceWorker.js"
@@ -68,7 +69,6 @@ jobs:
 
       - name: Push new branch
         run: |
-          # git fetch origin MSW-1 || true
           git push --force-with-lease origin MSW-1
 
       - name: Create new pull request
