@@ -28,7 +28,6 @@ jobs:
           cache: 'npm'
       - name: Install node_modules
         run: |
-          npm i msw@latest
           npm ci
 
       - name: Authenticate with PAT
@@ -40,6 +39,8 @@ jobs:
       - name: Regenerate mockServiceWorker.js
         run: |
           git checkout -b MSW-1
+
+          npm i msw@latest
           
           npx msw init public/ --save
 
@@ -57,7 +58,7 @@ jobs:
 
       - name: Push new branch
         run: |
-          git push origin MSW-1 --force
+          git push origin MSW-1
 
       - name: Create new pull request
         env:
