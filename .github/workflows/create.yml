@@ -29,6 +29,13 @@ jobs:
       - name: Install node_modules
         run: |
           npm ci
+
+      - name: Authenticate with PAT
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          echo $PAT_TOKEN | gh auth login --with-token
+
       - name: Regenerate mockServiceWorker.js
         run: |
           git checkout -b MSW-1
