@@ -42,42 +42,63 @@ jobs:
         run: |
           npm ci
       - name: Regenerate mockServiceWorker.js
-        if: ${{contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') }}
+        if: ${{ contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') }}
         run: |
-        
-          git checkout -b MSW-1
-
-          # DEPENDABOT_COMMIT_HASH=$(git rev-parse github.event.pull_request.head.ref)
-
-          echo "Current branch is: $(git rev-parse --abbrev-ref HEAD)"
-          # git config pull.rebase false      
-          # git pull origin $BRANCH_NAME --allow-unrelated-histories
-          # git checkout $BRANCH_NAME
-          
+          git config pull.rebase false
+          git pull origin ${{ github.event.pull_request.head.ref }} --allow-unrelated-histories
+          git checkout ${{ github.event.pull_request.head.ref }}
           npx msw init public/ --save
       - name: Check for changes in mockServiceWorker.js
-        if: ${{contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') }}
+        if: ${{ contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') }}
         run: |
           if [[ $(git status --porcelain) ]]; then
             git status --porcelain
             git add public/mockServiceWorker.js
-            git commit -m "ROM - blabla"
-            
-            # git commit -m "[dependabot skip] Automatically updating mockServiceWorker.js file after 'msw' update in package.json"
-            # git commit -m "Automatically updating mockServiceWorker.js file after 'msw' update in package.json"
-            # git push origin $BRANCH_NAME --force
-
+            git commit --no-verify -m "[dependabot skip] Automatically updatiing mockServiceWorker.js file after 'msw' update in package.json"
+            git push origin ${{ github.event.pull_request.head.ref }}
           else
             echo "No changes in mockServiceWorker.js"
           fi
 
-      - name: Push new branch
-        run: |
-          git push --force-with-lease origin MSW-1
 
-      - name: Create new pull request
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh pr create --base master --head MSW-1 --title 'MSW update' --body 'Created via CI/CD'
+
+      # - name: Regenerate mockServiceWorker.js
+      #   if: ${{contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') }}
+      #   run: |
+        
+      #     git checkout -b MSW-1
+
+      #     # DEPENDABOT_COMMIT_HASH=$(git rev-parse github.event.pull_request.head.ref)
+
+      #     echo "Current branch is: $(git rev-parse --abbrev-ref HEAD)"
+      #     # git config pull.rebase false      
+      #     # git pull origin $BRANCH_NAME --allow-unrelated-histories
+      #     # git checkout $BRANCH_NAME
+          
+      #     npx msw init public/ --save
+      # - name: Check for changes in mockServiceWorker.js
+      #   if: ${{contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') }}
+      #   run: |
+      #     if [[ $(git status --porcelain) ]]; then
+      #       git status --porcelain
+      #       git add public/mockServiceWorker.js
+      #       git commit -m "ROM - blabla"
+            
+      #       # git commit -m "[dependabot skip] Automatically updating mockServiceWorker.js file after 'msw' update in package.json"
+      #       # git commit -m "Automatically updating mockServiceWorker.js file after 'msw' update in package.json"
+      #       # git push origin $BRANCH_NAME --force
+
+      #     else
+      #       echo "No changes in mockServiceWorker.js"
+      #     fi
+
+      # - name: Push new branch
+      #   run: |
+      #     git push --force-with-lease origin MSW-1
+
+      # - name: Create new pull request
+      #   env:
+      #     GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     gh pr create --base master --head MSW-1 --title 'MSW update' --body 'Created via CI/CD'
