@@ -9,8 +9,8 @@ on:
     types:
       - opened
       # - synchronize # maybe don't need
-  #   branches:
-  #     - master
+    branches:
+      - master
 
 permissions:
   contents: write
