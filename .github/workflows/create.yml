@@ -38,6 +38,7 @@ jobs:
 
       - name: Regenerate mockServiceWorker.js
         run: |
+          git remote set-url origin https://${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
           git checkout -b MSW-1
 
           npm i msw@latest
@@ -59,14 +60,14 @@ jobs:
 
       - name: Push new branch
         run: |
-          git push origin MSW-1
+          git push origin MSW-1 || git push --set-upstream origin MSW-1
 
       - name: Create new pull request
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh pr create -B MSW-1 -H master --title 'Merge branch_to_merge into base_branch' --body 'Created by Github action'
+          gh pr create --base master --head ROM-2 --title 'Merge branch_to_merge into base_branch' --body 'Created by Github action'
           # gh pr create --title "My test title" --body "This PR updates the translations from OneSky" --head MSW-1 --base master
                   
           # curl -X POST \
