@@ -66,8 +66,8 @@ jobs:
         if: ${{contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') }}
         run: |
           git config pull.rebase false
-          git pull origin master
-          git checkout master
+          git pull
+          git checkout origin master
           git checkout -b MSW-1
 
           npm i -D msw@latest
