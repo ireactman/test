@@ -1,17 +1,16 @@
 name: msw
 
 on:
-  workflow_run:
-    workflows: [PR]
-    types: [completed]
-    branches: [master, dependabot/**]
+  # workflow_run:
+    # workflows: [PR]
+    # types: [completed]
+    # branches: [master, dependabot/**]
   pull_request:
     types:
-      # - opened
-      - synchronize # maybe don't need
+      - opened
+      # - synchronize # maybe don't need
   #   branches:
   #     - master
-
 
 permissions:
   contents: write
@@ -47,11 +46,13 @@ jobs:
       - name: Regenerate mockServiceWorker.js
         if: ${{contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') }}
         run: |
-          
+        
+          git checkout -b MSW-1
+
           echo "Current branch is: $(git rev-parse --abbrev-ref HEAD)"
-          git config pull.rebase false      
-          git pull origin $BRANCH_NAME --allow-unrelated-histories
-          git checkout $BRANCH_NAME
+          # git config pull.rebase false      
+          # git pull origin $BRANCH_NAME --allow-unrelated-histories
+          # git checkout $BRANCH_NAME
           
           npx msw init public/ --save
       - name: Check for changes in mockServiceWorker.js
@@ -61,8 +62,23 @@ jobs:
             git status --porcelain
             git add public/mockServiceWorker.js
             # git commit -m "[dependabot skip] Automatically updating mockServiceWorker.js file after 'msw' update in package.json"
-            git commit -m "Automatically updating mockServiceWorker.js file after 'msw' update in package.json"
-            git push origin $BRANCH_NAME --force
+            # git commit -m "Automatically updating mockServiceWorker.js file after 'msw' update in package.json"
+            # git push origin $BRANCH_NAME --force
           else
             echo "No changes in mockServiceWorker.js"
           fi
+
+      - name: Push new branch
+        run: |
+          git push origin MSW-1 --force
+
+      - name: Create new pull request
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+        run: |
+          curl -X POST \
+            -H "Authorization: token $GIT_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d '{"title":"Automated PR creation","head":"MSW-1","base":"main"}' \
+            https://api.github.com/repos/${{ github.repository }}/pulls
