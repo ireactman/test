@@ -5,6 +5,8 @@ on:
     # workflows: [PR]
     # types: [completed]
     # branches: [master, dependabot/**]
+    
+    
   pull_request:
     types: [opened, synchronize]
     # branches:
@@ -42,7 +44,7 @@ jobs:
         run: |
           npm ci
 
-          
+
       - name: Regenerate mockServiceWorker.js
         if: ${{ contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') }}
         run: |
