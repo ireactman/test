@@ -52,6 +52,7 @@ jobs:
             git add package-lock.json
             git add package.json
             git add public/mockServiceWorker.js
+            git commit -m "ROM - blabla"
           else
             echo "No changes in mockServiceWorker.js"
           fi
