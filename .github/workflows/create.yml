@@ -3,9 +3,9 @@ name: create
 on:
   workflow_dispatch:
 
-permissions:
-  contents: write
-  pull-requests: write
+permissions: write-all
+  # contents: write
+  # pull-requests: write
 
 env:
   GIT_AUTHOR_NAME: ${{ github.actor }}
@@ -58,4 +58,5 @@ jobs:
             -H "Accept: application/vnd.github.v3+json" \
             -d '{"title":"Automated PR creation","head":"MSW-1","base":"main"}' \
             https://api.github.com/repos/${{ github.repository }}/pulls
-          # gh pr create -B base_branch -H branch_to_merge --title 'Merge branch_to_merge into base_branch' --body 'Created by Github action'
+
+          #gh pr create -B base_branch -H branch_to_merge --title 'Merge branch_to_merge into base_branch' --body 'Created by Github action'
