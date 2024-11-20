@@ -10,7 +10,7 @@ on:
   workflow_run:
     workflows: [msw]
     types: [completed]
-    branches: [master]
+    # branches: [master]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
