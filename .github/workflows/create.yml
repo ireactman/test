@@ -69,7 +69,7 @@ jobs:
         run: |
           gh pr create --base master --head ROM-2 --title 'Merge branch_to_merge into base_branch' --body 'Created by Github action'
           # gh pr create --title "My test title" --body "This PR updates the translations from OneSky" --head MSW-1 --base master
-                  
+          ###        
           # curl -X POST \
           #   -H "Authorization: token $GITHUB_TOKEN" \
           #   -H "Accept: application/vnd.github.v3+json" \
