@@ -2,8 +2,7 @@ name: msw
 
 on:  
   pull_request:
-    branches:
-      - dependabot/**
+    types: [opened, synchronize]
 
 permissions:
   contents: write
