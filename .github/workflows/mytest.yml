@@ -57,4 +57,4 @@ jobs:
           git push origin new-msw-bump
           gh pr create --title "chore: bump msw to latest version" \
                        --body "This PR is based on the Dependabot bump for the MSW library." \
-                       --base main --head new-msw-bump
+                       --base master --head new-msw-bump
