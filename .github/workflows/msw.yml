@@ -46,8 +46,8 @@ jobs:
       - name: Regenerate mockServiceWorker.js
         if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
         run: |
-          git config --global user.name ireactman
-          gin config --global user.email ireactman@gmail.com
+          git config --global user.name "ireactman"
+          gin config --global user.email "ireactman@gmail.com"
 
           git fetch origin
           git checkout -f master
