@@ -61,7 +61,7 @@ jobs:
           git checkout -b new-msw-bump
           npx msw init public/ --save
           git add .
-          git push origin new-msw-bump
+          git push origin new-msw-bump --force
           gh pr create \
             --title "Bump msw to latest version" \
             --body "This PR is based on the Dependabot bump for the MSW library with updates in mockServiceWorker.js file" \
