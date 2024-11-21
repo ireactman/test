@@ -39,6 +39,8 @@ jobs:
           gh pr checkout "${PR_URL}"
           git checkout -b new-msw-bump
           npx msw init public/ --save
+          git status
+          git add .
           git push origin new-msw-bump
           gh pr create --title "chore: bump msw to latest version" \
                        --body "This PR is based on the Dependabot bump for the MSW library." \
