@@ -61,6 +61,7 @@ jobs:
           git checkout -b new-msw-bump
           npx msw init public/ --save
           git add .
+          git commit --no-verify -m "[dependabot skip] Automatically updatiing mockServiceWorker.js file after 'msw' update in package.json"
           git push origin new-msw-bump --force
           gh pr create \
             --title "Bump msw to latest version" \
