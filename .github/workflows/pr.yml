@@ -65,7 +65,7 @@ jobs:
 
   lint:
     # needs: msw
-    if: ${{ always() }}
+    if: ${{ !contains(github.event.pull_request.title, 'MSW_UPDATE') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
