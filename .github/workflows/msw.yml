@@ -45,6 +45,8 @@ jobs:
 
 
       - name: Regenerate mockServiceWorker.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
         run: |
           # git config --global user.name "ireactman"
@@ -60,6 +62,8 @@ jobs:
 
       - name: Check for changes in mockServiceWorker.js
         if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [[ $(git status --porcelain) ]]; then
             git status --porcelain
