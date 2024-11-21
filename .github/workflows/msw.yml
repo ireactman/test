@@ -2,7 +2,7 @@ name: msw
 
 on:  
   pull_request:
-    types: [opened]
+    types: [opened, edited]
 
 permissions:
   contents: write
@@ -19,6 +19,7 @@ env:
 
 jobs:
   update_msw_worker:
+    if: ${{ github.actor == 'dependabot[bot]' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -45,19 +46,11 @@ jobs:
 
 
       - name: Regenerate mockServiceWorker.js
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
         run: |
-          # git config --global user.name "ireactman"
-          # gin config --global user.email "ireactman@gmail.com"
-
-          # git fetch origin
-          # git checkout -f master
-
-          # git checkout -b ROM-999
-
-          # npm run b
+          git config pull.rebase false
+          git pull origin ${{ github.event.pull_request.head.ref }} --allow-unrelated-histories
+          git checkout ${{ github.event.pull_request.head.ref }}
           npx msw init public/ --save
 
       - name: Check for changes in mockServiceWorker.js
@@ -69,7 +62,7 @@ jobs:
             git status --porcelain
             git add .
             git commit --no-verify -m "[dependabot skip] Automatically updatiing mockServiceWorker.js file after 'msw' update in package.json"
-            git push
+            git push origin 
           else
             echo "No changes in mockServiceWorker.js"
           fi
