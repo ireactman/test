@@ -70,7 +70,7 @@ jobs:
 
       - name: Push new branch
         run: |
-          git push --force-with-lease origin MSW-1
+          git push --force origin MSW-1
 
       - name: Create new pull request
         env:
