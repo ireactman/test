@@ -27,7 +27,7 @@ jobs:
 
       - name: Authenticate with PAT
         run: |
-          echo "${{ secrets.PAT_TOKEN }}" | gh auth login --with-token
+          gh auth login --with-token
 
       - name: Set up node
         if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
