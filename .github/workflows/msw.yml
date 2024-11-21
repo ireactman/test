@@ -48,7 +48,8 @@ jobs:
         id: find_pr
         run: |
           # PR_ID=$(gh pr list --head ${{ github.event.pull_request.head.ref }} --json url --jq ".[0].url")
-          PR_ID=$(gh pr list ${{ github.event.pull_request.head.ref }} --json id --jq ".[0].id")
+          R_URL=$(gh pr list --search "dependabot update msw" --json url --jq ".[0].url")
+          # PR_ID=$(gh pr list ${{ github.event.pull_request.head.ref }} --json id --jq ".[0].id")
           echo "PR_ID=${PR_ID}" >> $GITHUB_ENV
 
       - name: Create new PR for msw bump
