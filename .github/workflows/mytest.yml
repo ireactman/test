@@ -20,6 +20,12 @@ jobs:
         # Checkout the repository
       - name: Checkout Code
         uses: actions/checkout@v4
+      
+      - name: Set up node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
 
       - name: Find Dependabot PR for msw
         id: find_pr
@@ -39,7 +45,7 @@ jobs:
           gh pr checkout "${PR_URL}"
           git checkout -b new-msw-bump
           npx msw init public/ --save
-          git status
+          git status --porcelain
           git add .
           git push origin new-msw-bump
           gh pr create --title "chore: bump msw to latest version" \
