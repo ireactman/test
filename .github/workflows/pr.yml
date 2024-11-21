@@ -4,7 +4,7 @@ on:
   pull_request:
     branches:
       - 'master'
-      - 'dependabot/**msw**'
+      - 'dependabot/npm_and_yarn/msw-2.6.5'
   # workflow_call:
   #   inputs:
   #     pr_branch:
