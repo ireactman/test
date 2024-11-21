@@ -37,32 +37,33 @@ jobs:
             exit 0
           fi
 
-      # - name: Authenticate with PAT
-      #   env:
-      #     PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
-      #   run: |
-      #     echo $PAT_TOKEN | gh auth login --with-token
+      - name: Authenticate with PAT
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          echo $PAT_TOKEN | gh auth login --with-token
+
       - name: Set up node
-        if: ${{contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') }}
+        if: ${{contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') && !contains(github.event.pull_request.title, 'DEV_UPDATE')}}
         uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
       - name: Install node_modules
-        if: ${{contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') }}
+        if: ${{contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') && !contains(github.event.pull_request.title, 'DEV_UPDATE')}}
         run: |
           npm ci
 
 
       - name: Regenerate mockServiceWorker.js
-        if: ${{ contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') }}
+        if: ${{ contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') && !contains(github.event.pull_request.title, 'DEV_UPDATE')}}
         run: |
           git config pull.rebase false
           git pull origin ${{ github.event.pull_request.head.ref }} --allow-unrelated-histories
           git checkout ${{ github.event.pull_request.head.ref }}
           npx msw init public/ --save
       - name: Check for changes in mockServiceWorker.js
-        if: ${{ contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') }}
+        if: ${{ contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') && !contains(github.event.pull_request.title, 'DEV_UPDATE')}}
         run: |
           if [[ $(git status --porcelain) ]]; then
             git status --porcelain
@@ -72,6 +73,15 @@ jobs:
           else
             echo "No changes in mockServiceWorker.js"
           fi
+      - name: Change title of PR
+        if: ${{ contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') && !contains(github.event.pull_request.title, 'DEV_UPDATE')}}
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          PR_NUMBER=$(gh pr list --head "dependabot/npm_and_yarn/msw-2.6.5" --json number -q '.[0].number')
+          CURRENT_TITLE=$(gh pr view "$PR_NUMBER" --json title -q '.title')
+          NEW_TITLE="DEV_UPDATE: $CURRENT_TITLE"
+          gh pr edit "$PR_NUMBER" --title "$NEW_TITLE"
 
 
 
