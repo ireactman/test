@@ -4,8 +4,6 @@ on:
   pull_request:
     branches:
       - 'master'
-      # - 'dependabot/**/msw-*'
-      # - 'MSW-1'
 
 
 permissions: write-all    
