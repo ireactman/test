@@ -5,6 +5,12 @@ on:
     branches:
       - 'master'
 
+  workflow_run:
+    workflows:
+      - msw
+    types:
+      - completed
+
 
 permissions: write-all    
 

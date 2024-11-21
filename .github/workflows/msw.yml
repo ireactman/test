@@ -73,15 +73,15 @@ jobs:
           else
             echo "No changes in mockServiceWorker.js"
           fi
-      - name: Change title of PR
-        if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
-        env:
-          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
-        run: |
-          PR_NUMBER=$(gh pr list --head ROM-999 --json number -q '.[0].number')
-          CURRENT_TITLE=$(gh pr view "$PR_NUMBER" --json title -q '.title')
-          NEW_TITLE="MSW_UPDATE: $CURRENT_TITLE"
-          gh pr edit "$PR_NUMBER" --title "$NEW_TITLE"
+      # - name: Change title of PR
+      #   if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
+      #   env:
+      #     GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+      #   run: |
+      #     PR_NUMBER=$(gh pr list --head ROM-999 --json number -q '.[0].number')
+      #     CURRENT_TITLE=$(gh pr view "$PR_NUMBER" --json title -q '.title')
+      #     NEW_TITLE="MSW_UPDATE: $CURRENT_TITLE"
+      #     gh pr edit "$PR_NUMBER" --title "$NEW_TITLE"
 
       # - name: Create new pull request
       #   if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
