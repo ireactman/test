@@ -22,7 +22,6 @@ env:
 jobs:
   update_msw_worker:
     runs-on: ubuntu-latest
-    if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -33,26 +32,26 @@ jobs:
           echo $PAT_TOKEN | gh auth login --with-token
 
       - name: Set up node
-        if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE')}}
+        if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
         uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
       - name: Install node_modules
-        if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE')}}
+        if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
         run: |
           npm ci
 
 
       # - name: Regenerate mockServiceWorker.js
-      #   if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE')}}
+      #   if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
       #   run: |
       #     git config pull.rebase false
       #     git pull origin ${{ github.event.pull_request.head.ref }} --allow-unrelated-histories
       #     git checkout ${{ github.event.pull_request.head.ref }}
       #     npx msw init public/ --save
       # - name: Check for changes in mockServiceWorker.js
-      #   if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE')}}
+      #   if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
       #   run: |
       #     if [[ $(git status --porcelain) ]]; then
       #       git status --porcelain
@@ -63,7 +62,7 @@ jobs:
       #       echo "No changes in mockServiceWorker.js"
       #     fi
       # - name: Change title of PR
-      #   if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE')}}
+      #   if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
       #   env:
       #     GH_TOKEN: ${{ secrets.PAT_TOKEN }}
       #   run: |
@@ -107,10 +106,12 @@ jobs:
           fi
 
       - name: Push new branch
+        if: ${{contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') }}
         run: |
           git push --force-with-lease origin MSW-1
 
       - name: Create new pull request
+        if: ${{contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') }}
         env:
           GH_TOKEN: ${{ secrets.PAT_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
