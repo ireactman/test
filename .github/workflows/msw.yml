@@ -2,7 +2,7 @@ name: msw
 
 on:  
   pull_request:
-    types: [opened]
+    types: [opened, edited]
 
 permissions:
   contents: write
@@ -19,6 +19,7 @@ env:
 
 jobs:
   update_msw_worker:
+    if: ${{ github.actor == 'dependabot[bot]' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
