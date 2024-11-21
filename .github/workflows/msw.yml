@@ -2,7 +2,7 @@ name: msw
 
 on:  
   pull_request:
-    types: [opened, synchronize]
+    types: [opened]
 
 permissions:
   contents: write
