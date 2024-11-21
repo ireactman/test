@@ -3,6 +3,9 @@ name: mytest
 on:
   workflow_dispatch: # Allows manual trigger of the workf
 
+env:
+  GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+
 jobs:
   check_dependabot_bump:
     runs-on: ubuntu-latest
