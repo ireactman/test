@@ -2,23 +2,11 @@ name: PR
 
 on:
   pull_request:
-    # branches:
-    #   - 'master'
-    #   - 'dependabot/**/msw-*'
-    #   - 'MSW-1'
+    branches:
+      - 'master'
+      # - 'dependabot/**/msw-*'
+      # - 'MSW-1'
 
-
-  # workflow_call:
-  #   inputs:
-  #     pr_branch:
-  #       required: true
-  #       type: string
-
-  # workflow_run:
-  #   workflows: [msw]
-  #   types: [completed]
-  
-    # branches: [master]
 
 permissions: write-all    
 
