@@ -26,6 +26,8 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
+      - name: Install node_modules
+        run: npm ci
 
       - name: Find Dependabot PR for msw
         id: find_pr
