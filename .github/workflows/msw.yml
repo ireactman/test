@@ -65,7 +65,7 @@ jobs:
         run: |
           if [[ $(git status --porcelain) ]]; then
             git status --porcelain
-            git .
+            git add .
             git commit --no-verify -m "[dependabot skip] Automatically updatiing mockServiceWorker.js file after 'msw' update in package.json"
             git push
           else
