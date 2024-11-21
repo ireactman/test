@@ -80,6 +80,7 @@ jobs:
 
   pr:
     needs: update_msw_worker
-    uses: ./.github/workflows/pr.yml
+    #uses: ./.github/workflows/pr.yml
+    uses: ./.github/actions/pr
     with:
       pr_branch: MSW-1
