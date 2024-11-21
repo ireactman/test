@@ -2,10 +2,12 @@ name: PR
 
 on:
   pull_request:
-    branches:
-      - 'master'
-      - 'dependabot/**/msw-*'
-      - 'MSW-1'
+    # branches:
+    #   - 'master'
+    #   - 'dependabot/**/msw-*'
+    #   - 'MSW-1'
+
+
   # workflow_call:
   #   inputs:
   #     pr_branch:
