@@ -57,7 +57,7 @@ jobs:
       - name: Create new PR for msw bump
         if: ${{ contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') }}
         run: |
-          gh pr checkout "${PR_ID}"
+          gh pr checkout "${PR_URL}"
           git checkout -b new-msw-bump
           npx msw init public/ --save
           git add .
@@ -71,4 +71,4 @@ jobs:
       - name: Close msw bump from Dependabot
         if: ${{ contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') }}
         run: |
-          gh pr remove "${PR_ID}"
+          gh pr remove "${PR_URL}"
