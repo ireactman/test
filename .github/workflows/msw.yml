@@ -1,12 +1,6 @@
 name: msw
 
-on:
-  # workflow_run:
-    # workflows: [PR]
-    # types: [completed]
-    # branches: [master, dependabot/**]
-    
-    
+on:  
   pull_request:
     types: [opened, synchronize]
     # branches:
@@ -17,6 +11,7 @@ permissions:
   pull-requests: write
 
 env:
+  GH_TOKEN: ${{ secrets.PAT_TOKEN }}
   GIT_AUTHOR_NAME: ${{ github.actor }}
   GIT_AUTHOR_EMAIL: ${{ github.actor }}@users.noreply.github.com
   GIT_COMMITTER_NAME: GitHub
