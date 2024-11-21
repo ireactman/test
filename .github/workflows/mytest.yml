@@ -44,8 +44,13 @@ jobs:
         run: |
           gh pr checkout "${PR_URL}"
           git checkout -b new-msw-bump
-          npx msw init public/ --save
+          echo "----------1"
           git status --porcelain
+          echo "----------2"
+          npx msw init public/ --save
+          echo "----------3"
+          git status --porcelain
+          echo "----------4"
           git add .
           git push origin new-msw-bump
           gh pr create --title "chore: bump msw to latest version" \
