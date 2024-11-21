@@ -27,7 +27,7 @@ jobs:
 
       - name: Authenticate with PAT
         run: |
-          echo "${{ secrets.PAT_TOKEN }}" | gh auth login --with-token
+          gh auth login --with-token
 
       - name: Set up node
         if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
@@ -87,7 +87,7 @@ jobs:
       #   run: |
       #     gh pr create --base master --head ROM-999 --title 'MSW update' --body 'Created via CI/CD'
 
-
+#222
 
       # - name: Regenerate mockServiceWorker.js
       #   if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
