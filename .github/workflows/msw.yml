@@ -3,10 +3,8 @@ name: msw
 on:  
   pull_request:
     types: [opened, synchronize]
-    paths-ignore:
-      - "public/mockServiceWorker.js"
-    # branches:
-    #   - master
+    branches:
+      - master
 
 permissions:
   contents: write
