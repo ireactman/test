@@ -94,10 +94,10 @@ jobs:
 
       - name: Push new branch
         run: |
-          git push --force-with-lease origin MSW-1
+          git push --force-with-lease origin ${{ github.event.pull_request.head.ref }}
 
-      - name: Create new pull request
-        env:
-          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
-        run: |
-          gh pr create --base master --head MSW-1 --title 'MSW update' --body 'Created via CI/CD'
+      # - name: Create new pull request
+      #   env:
+      #     GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+      #   run: |
+      #     gh pr create --base master --head MSW-1 --title 'MSW update' --body 'Created via CI/CD'
