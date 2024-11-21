@@ -22,7 +22,6 @@ env:
 jobs:
   update_msw_worker:
     runs-on: ubuntu-latest
-    if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -107,10 +106,12 @@ jobs:
           fi
 
       - name: Push new branch
+        if: ${{contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') }}
         run: |
           git push --force-with-lease origin MSW-1
 
       - name: Create new pull request
+        if: ${{contains(steps.dependabot-metadata.outputs.dependency-names, 'msw') }}
         env:
           GH_TOKEN: ${{ secrets.PAT_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
