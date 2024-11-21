@@ -74,8 +74,7 @@ jobs:
 
       - name: Create new pull request
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
           gh pr create --base master --head MSW-1 --title 'MSW update' --body 'Created via CI/CD'
           #
