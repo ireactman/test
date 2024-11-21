@@ -43,77 +43,77 @@ jobs:
           npm ci
 
 
-      # - name: Regenerate mockServiceWorker.js
-      #   if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
-      #   run: |
-      #     git config pull.rebase false
-      #     git pull origin ${{ github.event.pull_request.head.ref }} --allow-unrelated-histories
-      #     git checkout ${{ github.event.pull_request.head.ref }}
-      #     npx msw init public/ --save
-      # - name: Check for changes in mockServiceWorker.js
-      #   if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
-      #   run: |
-      #     if [[ $(git status --porcelain) ]]; then
-      #       git status --porcelain
-      #       git add public/mockServiceWorker.js
-      #       git commit --no-verify -m "[dependabot skip] Automatically updatiing mockServiceWorker.js file after 'msw' update in package.json"
-      #       git push origin ${{ github.event.pull_request.head.ref }}
-      #     else
-      #       echo "No changes in mockServiceWorker.js"
-      #     fi
-      # - name: Change title of PR
-      #   if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
-      #   env:
-      #     GH_TOKEN: ${{ secrets.PAT_TOKEN }}
-      #   run: |
-      #     PR_NUMBER=$(gh pr list --head "dependabot/npm_and_yarn/msw-2.6.5" --json number -q '.[0].number')
-      #     CURRENT_TITLE=$(gh pr view "$PR_NUMBER" --json title -q '.title')
-      #     NEW_TITLE="MSW_UPDATE: $CURRENT_TITLE"
-      #     gh pr edit "$PR_NUMBER" --title "$NEW_TITLE"
-
-
-
       - name: Regenerate mockServiceWorker.js
         if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
         run: |
-          git status --porcelain
           git config pull.rebase false
-          git pull origin master --allow-unrelated-histories
-          
-          git status --porcelain
-          git branch -r
-
-          git checkout master
-          git checkout -b MSW-1
-
-          git stash
-          npm i -D msw@latest
-
-          echo "Current branch is: $(git rev-parse --abbrev-ref HEAD)"
-          
+          git pull origin ${{ github.event.pull_request.head.ref }} --allow-unrelated-histories
+          git checkout ${{ github.event.pull_request.head.ref }}
           npx msw init public/ --save
       - name: Check for changes in mockServiceWorker.js
         if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
         run: |
           if [[ $(git status --porcelain) ]]; then
             git status --porcelain
-
-            git add .
-            git commit -m "ROM - blabla"
-
+            git add public/mockServiceWorker.js
+            git commit --no-verify -m "[dependabot skip] Automatically updatiing mockServiceWorker.js file after 'msw' update in package.json"
+            git push origin ${{ github.event.pull_request.head.ref }}
           else
             echo "No changes in mockServiceWorker.js"
           fi
-
-      - name: Push new branch
-        if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
-        run: |
-          git push --force-with-lease origin MSW-1
-
-      - name: Create new pull request
+      - name: Change title of PR
         if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
         env:
           GH_TOKEN: ${{ secrets.PAT_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh pr create --base master --head MSW-1 --title 'MSW update' --body 'Created via CI/CD'
+          PR_NUMBER=$(gh pr list --head "dependabot/npm_and_yarn/msw-2.6.5" --json number -q '.[0].number')
+          CURRENT_TITLE=$(gh pr view "$PR_NUMBER" --json title -q '.title')
+          NEW_TITLE="MSW_UPDATE: $CURRENT_TITLE"
+          gh pr edit "$PR_NUMBER" --title "$NEW_TITLE"
+
+
+
+      # - name: Regenerate mockServiceWorker.js
+      #   if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
+      #   run: |
+      #     git status --porcelain
+      #     git config pull.rebase false
+      #     git pull origin master --allow-unrelated-histories
+          
+      #     git status --porcelain
+      #     git branch -r
+
+      #     git checkout master
+      #     git checkout -b MSW-1
+
+      #     git stash
+      #     npm i -D msw@latest
+
+      #     echo "Current branch is: $(git rev-parse --abbrev-ref HEAD)"
+          
+      #     npx msw init public/ --save
+      # - name: Check for changes in mockServiceWorker.js
+      #   if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
+      #   run: |
+      #     if [[ $(git status --porcelain) ]]; then
+      #       git status --porcelain
+
+      #       git add .
+      #       git commit -m "ROM - blabla"
+
+      #     else
+      #       echo "No changes in mockServiceWorker.js"
+      #     fi
+
+      # - name: Push new branch
+      #   if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
+      #   run: |
+      #     git push --force-with-lease origin MSW-1
+
+      # - name: Create new pull request
+      #   if: ${{!contains(github.event.pull_request.title, 'MSW_UPDATE') && contains(github.event.pull_request.title, 'msw')}}
+      #   env:
+      #     GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     gh pr create --base master --head MSW-1 --title 'MSW update' --body 'Created via CI/CD'
