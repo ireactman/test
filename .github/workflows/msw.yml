@@ -30,6 +30,15 @@ jobs:
         id: dependabot-metadata
         uses: dependabot/fetch-metadata@v2
       - uses: actions/checkout@v4
+
+      - name: Check Last 5 Commits for [dependabot skip]
+        id: check-commits
+        run: |
+          # if has [dependabot skip] then skip workflow
+          if git log -5 --pretty=format:"%h - %an: %s" | grep -x ".*dependabot skip.*"; then
+            exit 0
+          fi
+
       # - name: Authenticate with PAT
       #   env:
       #     PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
